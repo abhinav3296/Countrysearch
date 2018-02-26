@@ -1,0 +1,40 @@
+<html>
+   <head> Project 
+       <script  src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.6/angular.min.js"></script>
+       <script type="text/javascript">
+var app = angular.module('myApp', []);
+app.controller('myCtrl', function($scope,$http) {
+    $scope.firstName = "John";
+    $scope.people = ['mohit','abhinav'];
+$http.get('https://restcountries.eu/rest/v2/all').success(function(response){$scope.countries = response ;
+	var now = new Date();
+	for(var i=0;i<$scope.countries.length;i++)
+	{   
+		var timezone = (($scope.countries[i].timezones[0]).split('+'));
+		if (timezone.length<2) {
+continue;
+		}
+	var timeDiffArr = timezone[1].split(':');;
+	console.log(timeDiffArr);
+	var minitesDifference = 0;
+	minitesDifference += (parseInt(timeDiffArr[0])*60);
+	minitesDifference += parseInt(timeDiffArr[1]);
+				var countrytime = new Date(now.getUTCFullYear(),now.getUTCMonth(),now.getUTCDate(),now.getUTCHours(),now.getUTCMinutes()+minitesDifference,now.getUTCSeconds());	
+    	$scope.countries[i].formattedTime = countrytime.getHours+':'+countrytime.getMinutes();
+    	console.log($scope.countries[i].formattedTime);			
+    }
+    
+    }
+    );	
+});	
+       </script>
+    </head>       
+        <body>
+        
+       <div ng-app="myApp" ng-controller="myCtrl">
+       <p>SEARCH:<input type="text" ng-model="search.name">
+       <span ng-bind="name"></span>
+       <div ng-repeat='x in countries| filter:search'> {{x.name}}---> {{x.timezone}} </div>
+       </body>
+</html>
+   
